@@ -1,6 +1,6 @@
 body {
-    font-family: 'Roboto', sans-serif;
-    background: #BFE6F1;
+    font-family: "Roboto", sans-serif;
+    background: #bfe6f1;
 }
 
 .game {
@@ -11,13 +11,48 @@ body {
 }
 .cards {
     display: grid;
-    grid-template-columns: 250px 250px 250px;
-    grid-template-rows: 250px 250px;
+    grid-template-columns: 150px 150px 150px;
+    grid-template-rows: 150px 150px;
     grid-gap: 20px;
 }
+
 .card {
-    width: 250px;
-    height: 250px;
+    position: relative;
+    perspective: 1000px;
 }
 
+.card__front,
+.card__back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    left: 0;
+    top: 0;
+    transition: 1s;
+    backface-visibility: hidden;
+    pointer-events: none;
+}
 
+.card__front {
+    background: red;
+}
+
+.card__back {
+    background: green;
+    transform: rotateY(180deg);
+}
+
+.card.active .card__front {
+    transform: rotateY(180deg);
+}
+
+.card.active .card__back {
+    transform: rotateY(360deg);
+}
+
+.hidden {
+    visibility: hidden;
+}
