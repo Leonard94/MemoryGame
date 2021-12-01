@@ -8,11 +8,12 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
 }
 .cards {
     display: grid;
-    grid-template-columns: 150px 150px 150px;
-    grid-template-rows: 150px 150px;
+    grid-template-columns: repeat(4, 70px);
+    grid-template-rows: repeat(3, 70px);
     grid-gap: 20px;
 }
 
@@ -31,18 +32,21 @@ body {
     width: 100%;
     left: 0;
     top: 0;
-    transition: 1s;
+    border-radius: 50%;
     backface-visibility: hidden;
     pointer-events: none;
+    transition: .4s;
 }
 
 .card__front {
-    background: red;
+    background: #364758;
 }
 
 .card__back {
-    background: green;
     transform: rotateY(180deg);
+    font-size: 24px;
+    font-weight: 500;
+    color: white;
 }
 
 .card.active .card__front {
@@ -51,8 +55,29 @@ body {
 
 .card.active .card__back {
     transform: rotateY(360deg);
+    background: #F1A53F;
 }
 
 .hidden {
     visibility: hidden;
 }
+
+.notice-body {
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+}
+.notice {
+    /* max-width: 220px; */
+    font-size: 16px;
+    background: white;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: 400;
+    line-height: 140%;
+    box-shadow: 0px 5px 20px 2px rgba(34, 60, 80, 0.3);
+    margin: 20px 0;
+    transition: all 1s ease;
+    color: #364758;
+}
+

@@ -10,7 +10,7 @@
  8. Иначе через секунду убираем класс active у обеих карточек
 */
 
-const dataColors = ['#F76B37', '#B7F7BF', '#9D9E9D'] // Исходный массив
+const dataColors = ['1', '2', '3', '4', '5', '6'] // Исходный массив
 const data = dataColors.concat(dataColors) // Удваиваем элементы массива
 mixArray(data) // Миксуем все элементы массива
 
@@ -21,16 +21,20 @@ function mixArray(array) {
         // случайный индекс от 0 до i
         let j = Math.floor(Math.random() * (i + 1))
         // меняем элементы местами
-        let t = array[i];
-        array[i] = array[j];
-        array[j] = t;
+        let t = array[i]
+        array[i] = array[j]
+        array[j] = t
     }
     return array;
 }
 
 const cardsBody = document.querySelector('.cards')
+const noticeBody = document.querySelector('.notice-body')
+
+
 let isWaitingSecondCard = false
-let firstCard;
+let firstCard
+let allBlocked = false
 
 
 // Render Cards
@@ -40,53 +44,84 @@ function renderCards(array) {
     for (let i = 0; i < array.length; i++) {
         content += `
         <div class="card" value=${array[i]} >
-            <div class="card__front" style="background: green">Рубашка</div>
-            <div class="card__back" style="background: ${array[i]}">Контент</div>
+            <div class="card__front"></div>
+            <div class="card__back">${array[i]}</div>
         </div>
         `
     }
-
     cardsBody.innerHTML = content
+
+    // Показываем на три секунды все карточки
+    showAllCards()
 }
 
 
 cardsBody.addEventListener('click', (e) => {
 
-    // При нажатии на карточку
+    if (allBlocked) {
+        // Показать уведомление
+        showNotification('Подождите переворота карточек')
+        return
+    }
     if (e.target.classList.contains('card')) {
+
+        // Если второй раз нажали на ту же карточку
+        if (firstCard === e.target) {
+            showNotification('Выберите вторую карточку')
+            return
+        }
 
         if (isWaitingSecondCard === false) {
             // Выбрали первую карточку
-            console.log('Выбрали первую карточку')
-            // Запоминаем её
-            firstCard = e.target
-            // Переворачиваем
-            firstCard.classList.add('active')
+            firstCard = e.target // Запоминаем её
+            firstCard.classList.add('active') // Переворачиваем
 
         } else {
             // Выбрали вторую карточку
-            console.log('Выбрали вторую карточку')
-            // Переворачиваем
-            e.target.classList.add('active')
+            e.target.classList.add('active') // Переворачиваем
 
             // Если вторая карточка совпадает с первой
             if (firstCard.getAttribute('value') === e.target.getAttribute('value')) {
-                console.log('!Они совпадают!')
                 // Добавляем класс invisible обоим карточкам
                 firstCard.classList.add('hidden')
                 e.target.classList.add('hidden')
-                
+                firstCard = ''
+
             } else {
                 // Если не совпадает, убрать класс active через секунду
-                setTimeout(()=>{
+                allBlocked = true
+                setTimeout(() => {
                     firstCard.classList.remove('active')
                     e.target.classList.remove('active')
-                }, 1000)
+                    allBlocked = false
+                    console.log(allBlocked)
+                    firstCard = ''
+                }, 800)
             }
         }
         isWaitingSecondCard = isWaitingSecondCard ? false : true
     }
 })
+
+function showAllCards() {
+    cardsBody.querySelectorAll('.card').forEach((item) => {
+        item.classList.add('active')
+        allBlocked = true
+        setTimeout(() => {
+            item.classList.remove('active')
+            allBlocked = false
+        }, 3000)
+    })
+}
+
+// Создаём и показываем уведомление
+function showNotification(message) {
+    const notice = document.createElement('div')
+    notice.classList.add('notice')
+    notice.innerHTML = message
+    noticeBody.appendChild(notice)
+    setTimeout(() => notice.remove(), 2000)
+}
 
 
 renderCards(data)
